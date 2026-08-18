@@ -4,7 +4,6 @@
   "description": "Cross-session reference (mention) for DeepSeek Harness: paste @[label](dsh-session:…) into any session — including one in another workspace — and the host resolves and injects the referenced session snapshot via the native session-reference pipeline. Includes a composer button that copies the current session's mention.",
   "type": "module",
   "main": "lib/index.js",
-  "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
     "./client": "./lib/client.js",
@@ -69,6 +68,7 @@
     "react": "^18.2.0",
     "tsdown": "^0.22.2",
     "typescript": "^5.7.0",
+    "unrun": "^0.3.1",
     "vitest": "^4.1.10"
   }
 }
