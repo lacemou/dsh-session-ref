@@ -27,6 +27,23 @@ Full design notes: [SPEC.md](SPEC.md) (Chinese).
   deduplication, budget bounds (≤3 sources / ≤64 KB), self-reference
   rejection, and the untrusted-context warning.
 
+## Important limitations
+
+1. **Community plugin**: not an official DSH component; maintained by the
+   community. Relies on host-internal contracts that may break on upgrades.
+2. **Snapshot semantics**: references are capture-time snapshots, not live
+   sessions; subsequent source changes do not propagate to the target.
+3. **Context budget**: at most 3 sources per message and 64 KB per source
+   snapshot; over-budget references are truncated or rejected outright.
+4. **Self-reference rejection**: referencing the current session is rejected
+   natively to prevent cycles.
+5. **Internal dependencies**: depends on host-internal interfaces
+   (`agent/pre-step`, `sessionReferenceResolver`) and session-log formats;
+   may break after host upgrades.
+6. **Capability boundary**: not infinite context (injected snapshots occupy
+   target context until compaction) and not automatic collaboration
+   (one-way reference; no messaging or task handoff).
+
 ## Install
 
 ```sh
@@ -79,8 +96,6 @@ npm run build       # tsc --noEmit + tsdown → lib/index.js (host) + lib/client
 
 - No `@` autocomplete yet (see M2 in the roadmap below; the MVP closes the loop
   via copy-reference → paste).
-- References are capture-time snapshots, not live subscriptions; later changes
-  in the source session do not propagate.
 - Text-only projection: non-text blocks (images, tool results) do not cross
   sessions.
 - Reading sessions written by other DSH versions may fail (native limitation);
