@@ -41,7 +41,7 @@
     "url": "https://github.com/lacemou/dsh-session-ref/issues"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dsh": {
     "bundle": {
