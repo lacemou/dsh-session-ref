@@ -23,11 +23,14 @@
 ## 安装
 
 ```sh
-# 方式一：git 安装（lib/ 已提交，无需构建）
+# 方式一：npm 安装（推荐）
+dsh plugin add dsh-session-ref
+
+# 方式二：git 安装（lib/ 已提交，无需构建）
 git clone https://github.com/lacemou/dsh-session-ref
 dsh plugin --profile web add /path/to/dsh-session-ref
 
-# 方式二：本地开发安装
+# 方式三：本地开发安装
 cd dsh-session-ref
 npm install
 npm run build
