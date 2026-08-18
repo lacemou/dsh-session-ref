@@ -48,7 +48,7 @@ Full design notes: [SPEC.md](SPEC.md) (Chinese).
 
 ```sh
 # Option 1: npm (recommended)
-dsh plugin add dsh-session-ref
+dsh plugin --profile web add dsh-session-ref
 
 # Option 2: git checkout (lib/ is committed — no build step)
 git clone https://github.com/lacemou/dsh-session-ref

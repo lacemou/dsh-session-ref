@@ -35,7 +35,7 @@
 
 ```sh
 # 方式一：npm 安装（推荐）
-dsh plugin add dsh-session-ref
+dsh plugin --profile web add dsh-session-ref
 
 # 方式二：git 安装（lib/ 已提交，无需构建）
 git clone https://github.com/lacemou/dsh-session-ref
