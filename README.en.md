@@ -28,7 +28,7 @@ Full design notes: [SPEC.md](SPEC.md) (Chinese).
 ## Install
 
 ```sh
-git clone <your-repo-url>
+git clone https://github.com/lacemou/dsh-session-ref
 cd dsh-session-ref
 npm install
 npm run build

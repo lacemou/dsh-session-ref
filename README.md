@@ -24,7 +24,7 @@
 
 ```sh
 # 方式一：git 安装（lib/ 已提交，无需构建）
-git clone <你的仓库地址>
+git clone https://github.com/lacemou/dsh-session-ref
 dsh plugin --profile web add /path/to/dsh-session-ref
 
 # 方式二：本地开发安装
