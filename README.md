@@ -1,5 +1,7 @@
 # dsh-session-ref
 
+![CI](https://github.com/lacemou/dsh-session-ref/actions/workflows/ci.yml/badge.svg)
+
 **跨会话引用（mention）插件 for DeepSeek Harness。**
 
 在任意会话（包括**另一个工作区/文件夹**的会话）里，粘贴

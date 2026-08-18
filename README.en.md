@@ -1,5 +1,7 @@
 # dsh-session-ref
 
+![CI](https://github.com/lacemou/dsh-session-ref/actions/workflows/ci.yml/badge.svg)
+
 **Cross-session reference (mention) plugin for DeepSeek Harness.**
 
 Paste `@[label](dsh-session:<id>)` into any session — **including one in a
