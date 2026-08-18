@@ -81,12 +81,23 @@ npm run build       # tsc --noEmit + tsdown → lib/index.js (node) + lib/client
 
 ## 已知限制
 
-- 无 @ 自动补全（M2 路线；MVP 靠复制-粘贴闭环）。
+- 无 @ 自动补全（见下方 Roadmap 的 M2；当前靠「复制引用 → 粘贴」闭环）。
 - 引用是 capture-time 快照（非实时订阅）；源会话后续变化不传播。
 - 快照仅文本投影；非文本块（图片/工具结果）不跨会话。
 - 读取其他 DSH 版本写入的会话可能失败（原生限制），失败时消息原样降级。
 - 引用当前宿主从未加载过的会话（跨进程）走 persistence 路径，部分部署
   （如 headless profile）可能不支持；引用 live 会话始终可用。
+
+## Roadmap（后续路线）
+
+| 里程碑 | 内容 |
+|---|---|
+| **M2** | **输入框 @ 自动补全**：输入 `@` 弹出会话候选列表（来自原生 `listCandidates`，按工作区亲和度排序），键盘选择后自动插入 `@[标题](dsh-session:…)`——把「复制-粘贴」升级为一步 @ 选择 |
+| M3 | 跨工作区目录浏览 + 引用粒度选择（整会话 / 用户结点 / 区间） |
+| M4 | 与 [dsh-crosstalk](https://github.com/Jesse-njx/dsh-crosstalk) 集成：引用 + 转交任务 |
+| M5 | 把「复制 Session ID / 复制引用」贡献回上游核心 UI |
+
+完整设计见 [SPEC.md](SPEC.md)。
 
 ## License
 

@@ -77,8 +77,8 @@ npm run build       # tsc --noEmit + tsdown → lib/index.js (host) + lib/client
 
 ## Known limitations
 
-- No `@` autocomplete yet (roadmap M2; the MVP closes the loop via
-  copy-reference → paste).
+- No `@` autocomplete yet (see M2 in the roadmap below; the MVP closes the loop
+  via copy-reference → paste).
 - References are capture-time snapshots, not live subscriptions; later changes
   in the source session do not propagate.
 - Text-only projection: non-text blocks (images, tool results) do not cross
@@ -88,6 +88,17 @@ npm run build       # tsc --noEmit + tsdown → lib/index.js (host) + lib/client
 - Cross-process references to sessions the current host has never loaded go
   through the persistence path, which some deployments (e.g. headless
   profiles) may not serve; referencing live sessions always works.
+
+## Roadmap
+
+| Milestone | Scope |
+|---|---|
+| **M2** | **`@` autocomplete in the composer**: typing `@` lists session candidates (from the native `listCandidates`, ranked by workspace affinity); keyboard selection inserts `@[title](dsh-session:…)` — upgrading copy-paste to a one-step mention |
+| M3 | Cross-workspace directory browsing + reference granularity (whole session / user nodes / ranges) |
+| M4 | Integration with [dsh-crosstalk](https://github.com/Jesse-njx/dsh-crosstalk): reference + handoff |
+| M5 | Contribute "copy session ID / copy reference" back to the upstream core UI |
+
+Full design notes: [SPEC.md](SPEC.md) (Chinese).
 
 ## License
 
