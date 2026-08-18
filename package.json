@@ -1,0 +1,74 @@
+{
+  "name": "dsh-session-ref",
+  "version": "0.1.0",
+  "description": "Cross-session reference (mention) for DeepSeek Harness: paste @[label](dsh-session:…) into any session — including one in another workspace — and the host resolves and injects the referenced session snapshot via the native session-reference pipeline. Includes a composer button that copies the current session's mention.",
+  "type": "module",
+  "main": "lib/index.js",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "lib/client.js.map",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run test && npm run build"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "session",
+    "reference",
+    "cross-session",
+    "mention",
+    "recall"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lacemou/dsh-session-ref.git"
+  },
+  "homepage": "https://github.com/lacemou/dsh-session-ref#readme",
+  "bugs": {
+    "url": "https://github.com/lacemou/dsh-session-ref/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ],
+      "platform": "web"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-session-reference": "^0.1.0-rc.6"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-agent": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
+    "@types/react": "^18.3.1",
+    "react": "^18.2.0",
+    "tsdown": "^0.22.2",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.10"
+  }
+}

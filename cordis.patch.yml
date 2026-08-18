@@ -1,0 +1,7 @@
+# dsh-session-ref bundle layer: one row mounts the package, which serves BOTH
+# halves — the host half (agent/pre-step reference injection) applies on the
+# host, and the dsh.client manifest ships the browser half (composer trigger
+# button) through exports["./client"].
+- insert:
+    - id: session-ref
+      name: dsh-session-ref
