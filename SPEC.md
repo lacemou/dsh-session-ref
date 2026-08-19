@@ -297,6 +297,36 @@ if (root.sessionReferenceResolver === undefined) {
 `prepare()` 被真实调用并进入 `sessionQuery.readSurface()`（此前报
 `cannot get property "sessionReferenceResolver" without inject`）。
 
+### 发现 3（rc.8 升级冲突，2026-08-20）：宿主原生挂载 + 并行注册竞态
+
+DSH **rc.8 原生挂载了 `session-reference` 条目**（配置树含
+`- id: session-reference`，rc.6/rc.7 没有），它会注册
+`sessionReferenceResolver`。由于 loader **并行 apply** 条目（
+`Promise.allSettled`），插件的自注册与原生条目谁先谁后不确定——两处
+`new SessionReferenceResolver` 注册同名服务，其中一个必然抛
+`service "sessionReferenceResolver" has been registered`，导致**整个
+plugin tree 加载失败、web 无法启动**（实机复现）。
+
+**修复（双管齐下）**：
+
+1. **bundle patch 禁用原生条目**（`cordis.patch.yml`）：
+
+   ```yaml
+   - id: session-reference
+     disabled: true
+   ```
+
+   使本插件的自注册成为唯一注册者。rc.6/rc.7 无该条目时 patch 仅产生
+   "entry not found" **警告**（实测不崩溃），兼容旧版本。
+
+2. **代码加固**（`src/index.ts`）：存在性检测改用 cordis store API
+   `root.get('sessionReferenceResolver', false)`（无 inject 要求、不抛错、
+   `strict=false` 忽略 fiber 状态）；注册包 try/catch——若与并发注册者
+   竞态，静默降级为使用现有实例。
+
+**验证**：21 个 vitest 全绿（新增：服务已存在时跳过注册、注册竞态降级两例）；
+rc.8 实机：patch disable 生效（`disabled: true` 条目）、不存在的 id 仅警告。
+
 ### 发现 2：headless 环境 `persistence.list()` 返回空（跨进程引用受限）
 
 headless 真实测试中 `readSurface` 对**任何持久化会话**（含 headless 自身创建的）

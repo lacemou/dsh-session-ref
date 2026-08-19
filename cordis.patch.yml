@@ -1,7 +1,16 @@
-# dsh-session-ref bundle layer: one row mounts the package, which serves BOTH
-# halves — the host half (agent/pre-step reference injection) applies on the
-# host, and the dsh.client manifest ships the browser half (composer trigger
-# button) through exports["./client"].
+# dsh-session-ref bundle layer.
+#
+# - Disables the native `session-reference` entry on hosts that mount it
+#   (rc.8+): the native entry registers `sessionReferenceResolver`, which this
+#   bundle also registers for rc.6/rc.7 hosts — two registrations race because
+#   the loader applies entries in parallel and would crash the plugin tree.
+#   Disabling the native entry makes this bundle the single owner. On rc.6/rc.7
+#   (no such entry) the patch is a harmless "entry not found" warning.
+# - Inserts this bundle's own `session-ref` entry. The host half (pre-step
+#   injection) applies on the host; the dsh.client manifest ships the browser
+#   half (composer trigger button) through exports["./client"].
+- id: session-reference
+  disabled: true
 - insert:
     - id: session-ref
       name: dsh-session-ref

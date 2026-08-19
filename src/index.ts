@@ -38,6 +38,8 @@ export interface HostContext {
     ): Promise<{ content: ContentBlock[]; additionalContext?: UserMessage }>
   }
   readonly root?: HostContext
+  /** cordis store read without the inject requirement; undefined when not provided. */
+  get?(name: string, strict?: boolean): unknown
   on(
     event: 'agent/pre-step',
     listener: (payload: PreStepPayload, next: () => Promise<PreStepDecision>) => Promise<PreStepDecision>,
@@ -88,19 +90,38 @@ function rewriteContent(content: readonly ContentBlock[]): {
   return { content: blocks, references }
 }
 
-/** Register the pre-step listener and, when absent, the native resolver service. */
+/** Resolve the sessionReferenceResolver service from the root store. */
+function readResolver(root: HostContext): HostContext['sessionReferenceResolver'] | undefined {
+  if (root.get !== undefined) return root.get('sessionReferenceResolver', false) as HostContext['sessionReferenceResolver']
+  return root.sessionReferenceResolver
+}
+
+/**
+ * Register the pre-step listener and, when absent, the native resolver service.
+ *
+ * Hosts before rc.8 do not mount `sessionReferenceResolver`; this plugin
+ * registers it (its bundle patch disables the native `session-reference` entry
+ * on rc.8+ so this registration is the single owner). Detection uses the
+ * cordis store API (`get(name, false)` — no inject requirement, any provider
+ * regardless of fiber state) and the registration itself is race-tolerant: if
+ * a concurrent provider (e.g. a host that re-enables the native entry) wins,
+ * we fall back to whatever is registered and continue.
+ */
 export function apply(ctx: HostContext, config: HostConfig = {}): void {
   const root = ctx.root ?? ctx
 
-  // rc.6 deployments do not mount sessionReferenceResolver; register it on the
-  // root so any host (and this listener) can resolve it. Idempotent: a host
-  // that already provides the service keeps its own instance.
-  if (root.sessionReferenceResolver === undefined) {
-    new SessionReferenceResolver(root as never, {
-      maxReferences: config.maxReferences,
-      candidateLimit: config.candidateLimit,
-      maxReferenceBytes: config.maxReferenceBytes,
-    } as never)
+  if (readResolver(root) === undefined) {
+    try {
+      new SessionReferenceResolver(root as never, {
+        maxReferences: config.maxReferences,
+        candidateLimit: config.candidateLimit,
+        maxReferenceBytes: config.maxReferenceBytes,
+      } as never)
+    } catch (error) {
+      // Race: another fiber registered the service between the check and the
+      // registration. Fall back to the existing instance.
+      console.warn('[session-ref] sessionReferenceResolver registration raced; using existing service', error)
+    }
   }
 
   ctx.on('agent/pre-step', async ({ agent, messages, signal }, next): Promise<PreStepDecision> => {
@@ -123,7 +144,7 @@ export function apply(ctx: HostContext, config: HostConfig = {}): void {
     }
     if (!anyReference) return decision
 
-    const resolver = root.sessionReferenceResolver
+    const resolver = readResolver(root)
     if (resolver === undefined) {
       console.error('[session-ref] sessionReferenceResolver unavailable; skipping injection')
       return decision

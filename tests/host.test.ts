@@ -152,3 +152,30 @@ describe('host half: agent/pre-step', () => {
     expect(prepare).not.toHaveBeenCalled()
   })
 })
+
+describe('host half: resolver registration', () => {
+  it('skips registration when the service is already present (get returns it)', () => {
+    let registered = 0
+    const existing = { prepare: async () => ({ content: [] }) }
+    const ctx = {
+      root: null,
+      get: (name: string) => (name === 'sessionReferenceResolver' ? existing : undefined),
+      on() { registered += 1 },
+    } as never
+    apply(ctx) // must not throw: SessionReferenceResolver would need a real cordis ctx
+    expect(registered).toBe(1)
+  })
+
+  it('degrades gracefully when registration races (constructor throws)', () => {
+    let registered = 0
+    let getCalls = 0
+    const ctx = {
+      root: null,
+      get: () => { getCalls += 1; return undefined }, // never present -> tries to register -> throws
+      on() { registered += 1 },
+    } as never
+    apply(ctx) // constructor throws on the mock root; apply must catch and continue
+    expect(registered).toBe(1)
+    expect(getCalls).toBeGreaterThanOrEqual(1)
+  })
+})
