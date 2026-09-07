@@ -10,6 +10,19 @@
 
 完整设计见 [SPEC.md](SPEC.md)。英文版见 [README.en.md](README.en.md)。
 
+## 版本支持(0.2.x)
+
+| 插件版本 | DSH 宿主 | 说明 |
+|---|---|---|
+| **0.2.x(当前)** | 0.1.2-rc.1(及同队列后续)| 面向最新队列;client 半对旧队列同构,理论上可回退运行 |
+| 0.1.x | 0.1.0-rc.6 ~ 0.1.1-rc.2 | 旧队列发布线(迁移记录见 `.agents/MIGRATION-0.1.2.md`) |
+
+> 0.1.2 队列拆除了 `@deepseek-ai/dsh-client-runtime`(插件 0.1.x 的 client 依赖),
+> 因此 0.2.0 的 client 半改为**零宿主值依赖**:bundle 只 require `react`,
+> `dsh.client.inject` 置空,类型全部指向 0.1.2-rc.1 的新域包(`cordis` /
+> `dsh-api-session-controller` / `dsh-session`)。同一产物在 0.1.2+ 宿主上不会
+> 再因 phantom dependency 而不进入 boot graph。
+
 ## 特性（MVP）
 
 - **宿主半**：`agent/pre-step` 解析 `@[label](dsh-session:…)` 与裸
@@ -66,7 +79,7 @@ dsh plugin --profile web add /path/to/dsh-session-ref
 
 ```sh
 npm run typecheck   # tsc --noEmit
-npm run test        # vitest run（19 个测试：宿主半注入、URI 编码一致性、客户端复制）
+npm run test        # vitest run（21 个测试：宿主半注入、URI 编码一致性、客户端复制）
 npm run build       # tsc --noEmit + tsdown → lib/index.js (node) + lib/client.js (browser)
 ```
 

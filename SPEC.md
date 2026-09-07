@@ -1,8 +1,16 @@
 # dsh-session-ref — 跨会话引用插件（SPEC）
 
-> 版本：0.1（MVP）
-> 状态：设计定稿，待实现
-> 对应 DSH：`@deepseek-ai/dsh` 0.1.0-rc.6（Web GUI）
+> 版本：0.2（MVP，0.1.2 队列适配）
+> 状态：设计定稿，0.2.0 已实现（类型检查/单测/构建通过，真机验证见 README 验证状态）
+> 对应 DSH：`@deepseek-ai/dsh` 0.1.2-rc.1（Web GUI）；0.1.0-rc.6 ~ 0.1.1-rc.2
+> 由 0.1.x 发布线支持（迁移记录见 `.agents/MIGRATION-0.1.2.md`）
+
+---
+
+> **0.2.0 变更摘要**：DSH 0.1.2-alpha.1 起拆除 `@deepseek-ai/dsh-client-runtime`，
+> client 半改为零宿主值依赖（bundle 仅 require `react`、`dsh.client.inject` 置空、
+> 类型指向 `cordis` / `dsh-api-session-controller` / `dsh-session` / ui-slots@0.1.2-rc.1），
+> 同一产物跨队列可用；宿主半逻辑未变（禁用原生 entry + 旧队列回退注册的设计保留）。
 
 ---
 

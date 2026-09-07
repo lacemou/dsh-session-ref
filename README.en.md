@@ -11,6 +11,21 @@ conversations can be referenced directly; no more paraphrasing by hand.
 
 Full design notes: [SPEC.md](SPEC.md) (Chinese).
 
+## Version support (0.2.x)
+
+| Plugin | DSH host | Notes |
+|---|---|---|
+| **0.2.x (current)** | 0.1.2-rc.1 and same-cohort releases | Targets the newest cohort; the client half is shape-compatible with older cohorts |
+| 0.1.x | 0.1.0-rc.6 – 0.1.1-rc.2 | Legacy-cohort release line (see `.agents/MIGRATION-0.1.2.md`) |
+
+> The 0.1.2 cohort removed `@deepseek-ai/dsh-client-runtime` (which the 0.1.x
+> client depended on), so 0.2.0's client half carries **zero value imports from
+> host packages**: the bundle only requires `react`, `dsh.client.inject` is
+> empty, and all types point at the 0.1.2-rc.1 domain packages (`cordis`,
+> `dsh-api-session-controller`, `dsh-session`). The same artifact no longer
+> falls out of the boot graph on 0.1.2+ hosts due to a phantom dependency
+> (DSH-0.1.2-A1-25).
+
 ## Features (MVP)
 
 - **Host half**: an `agent/pre-step` listener parses `@[label](dsh-session:…)`
@@ -88,7 +103,7 @@ is passed through untouched in those cases.
 
 ```sh
 npm run typecheck   # tsc --noEmit
-npm run test        # vitest run (19 tests: host injection, URI encoding parity, client copy)
+npm run test        # vitest run (21 tests: host injection, URI encoding parity, client copy)
 npm run build       # tsc --noEmit + tsdown → lib/index.js (host) + lib/client.js (browser)
 ```
 

@@ -10,7 +10,8 @@
  * own node_modules at runtime by the host Loader. The browser half keeps every
  * @deepseek-ai import type-only (erased) so the client purity gate passes;
  * only react / react/jsx-runtime are value imports, resolved from the platform
- * seed list.
+ * seed list. No host cohort package is a value import — the same bundle loads
+ * on 0.1.x and 0.1.2+ hosts (cross-cohort, see .agents/MIGRATION-0.1.2.md).
  */
 
 import { defineConfig } from 'tsdown'
@@ -27,8 +28,8 @@ const PLATFORM_MODULES = [
   '@deepseek-ai/dsh-client-schema-form',
 ] as const
 
-/** Externals resolved from the loader module table: platform seed + the runtime store exemption. */
-const CLIENT_EXTERNALS: readonly string[] = [...PLATFORM_MODULES, '@deepseek-ai/dsh-client-runtime/client']
+/** Externals resolved from the loader module table: the platform seed list only. */
+const CLIENT_EXTERNALS: readonly string[] = [...PLATFORM_MODULES]
 
 export default defineConfig([
   {
