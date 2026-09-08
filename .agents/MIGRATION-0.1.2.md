@@ -100,3 +100,11 @@ Codex 亦未改动本插件(profile 中它一直是 link → 工作区 0.2.0)。
 佐证:GUI 自 ~08:10 稳定运行,dsh-app-boot 对任何插件加载失败都会硬抛
 「plugin(s) failed to load … Cordis startup failed」→ 含 session-ref 的整树能起来即 host 半已实载。
 已补 tag v0.2.0。剩余:浏览器交互验证(按钮/复制/注入)。
+
+## 浏览器交互验证(2026-09-08,用户实机回报)
+
+按 README「验证状态」三项在 rc.1(0.1.2-rc.1)GUI 实测:**全部成功**。
+① 工具条「复制引用」按钮出现;② 点击复制出 `@[标题](dsh-session:…)`;
+③ 另一会话粘贴发送后出现 Session recall 行(跨会话注入生效)。
+
+→ 目标达成:迁移 + 静态校验 + rc.1 真机端到端均通过。v0.1.3(旧线)/v0.2.0(新线)tag 已就位。
