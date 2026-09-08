@@ -79,3 +79,24 @@
 - [ ] npm pack 内容核对(files 白名单排除 .agents)
 - [ ] 真机:rc.2 冒烟(可选)→ 全局升 0.1.2-rc.1 → rc.1 冒烟
 - [ ] 发布决策:0.2.0 是否推送 npm / 更新 GitHub release(与用户确认)
+## 真机验证记录(2026-09-08,rc.1 全局 GUI)
+
+- 全局 @deepseek-ai/dsh = 0.1.2-rc.1;GUI 由 npx dsh web 运行,DSH_HOME=~/.dsh,rc.1 引导令牌鉴权正常(401 属预期)。
+- 重启失败根因(DSHNotch-dsh.log):**EADDRINUSE 127.0.0.1:3080** —— 旧 rc.2 实例仍占用端口,非插件错误。
+  旧实例停止后新实例约 08:12 就绪。
+- profile 内 dsh-session-ref = link → 工作区 0.2.0(已提交 9c97441);依赖树 rc.1(cordis 4.0.2 等)在位。
+- `dsh --profile web --dump-config`(rc.1,exit 0):组合树含
+  `- id: session-reference name:'@deepseek-ai/dsh-session-reference' disabled: true`(# patched by dsh-session-ref)与
+  `- id: session-ref name: dsh-session-ref`;全文无 error/warn/not-found → bundle 层 patch 在 rc.1 上按设计生效。
+- 剩余:浏览器交互验证(复制按钮 + 粘贴注入 Session recall)——需人工 30s,见 README「验证状态」与目标描述。
+
+## 启动失败根因确认(2026-09-08,Codex 笔录证据)
+
+Codex 恢复会话(~/.codex/sessions/2026/09/08/rollout-2026-09-08T07-5[69]-*.jsonl)全文**零次提及 dsh-session-ref**。
+其收敛方案原文:「升级 dsh-better-sidebar@0.18.0、dshmarket@1.45.0(两者旧 settings API 不兼容 rc.1),
+并对只声明旧 DSH 0.1.0-rc.6 的 dsh-imessage 做可逆禁用」。即启动失败元凶 = 市场插件
+(better-sidebar / dshmarket / dsh-imessage)+ Notch 重拉时的 EADDRINUSE 端口占用,**与 dsh-session-ref 无关**,
+Codex 亦未改动本插件(profile 中它一直是 link → 工作区 0.2.0)。
+佐证:GUI 自 ~08:10 稳定运行,dsh-app-boot 对任何插件加载失败都会硬抛
+「plugin(s) failed to load … Cordis startup failed」→ 含 session-ref 的整树能起来即 host 半已实载。
+已补 tag v0.2.0。剩余:浏览器交互验证(按钮/复制/注入)。
