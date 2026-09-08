@@ -108,3 +108,9 @@ Codex 亦未改动本插件(profile 中它一直是 link → 工作区 0.2.0)。
 ③ 另一会话粘贴发送后出现 Session recall 行(跨会话注入生效)。
 
 → 目标达成:迁移 + 静态校验 + rc.1 真机端到端均通过。v0.1.3(旧线)/v0.2.0(新线)tag 已就位。
+
+## 发布记录(2026-09-08)
+
+- GitHub release v0.2.0: https://github.com/lacemou/dsh-session-ref/releases/tag/v0.2.0
+- npm: dsh-session-ref@0.2.0 已发布 = latest(registry 验证:deps ^0.1.2-rc.1、dsh.client.inject [])。
+- 本机 npm 令牌保存在工作区 DeepseekHarness/.npmrc-publish(未入库;如不需要可删除)。
